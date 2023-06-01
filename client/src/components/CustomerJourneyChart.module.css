@@ -1,0 +1,18 @@
+/* CustomerJourneyChart.module.css */
+.side-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 320px;
+    background-color: #fff;
+    padding: 20px;
+    z-index: 9999;
+  }
+  
+  .popoverContainer {
+    position: absolute;
+    z-index: 9999;
+    /* Add other styles for the popover container */
+  }
+

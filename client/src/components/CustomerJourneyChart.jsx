@@ -1,9 +1,9 @@
 // CustomerJourneyChart.jsx
-// CustomerJourneyChart.jsx
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js';
-
+import styles from './CustomerJourneyChart.module.css';
+import { Popover } from 'react-bootstrap';
 import JourneyTimeline from './JourneyTimeline';
 import Touchpoint from './Touchpoint';
 
@@ -23,8 +23,8 @@ function CustomerJourneyChart() {
     setFilteredSegmentIds(selectedFilters);
   };
 
-  const handleTouchpointClick = (touchpoint) => {
-    setSelectedTouchpoint(touchpoint);
+  const handleTouchpointClick = (touchpoint, x, y) => {
+    setSelectedTouchpoint({ ...touchpoint, x, y });
   };
 
   const toggleLine = () => {
@@ -101,6 +101,14 @@ function CustomerJourneyChart() {
     datasets: datasets.flat(),
   };
 
+  // Calculate dot position if a touchpoint is selected
+  const dotPosition = selectedTouchpoint
+    ? {
+      x: selectedTouchpoint.x, // Example x-coordinate value of the selected touchpoint
+      y: selectedTouchpoint.y, // Example y-coordinate value of the selected touchpoint
+    }
+    : null;
+
   return (
     <div>
       <h2>Customer Segments:</h2>
@@ -121,7 +129,9 @@ function CustomerJourneyChart() {
               const selectedSegment = filteredSegments[segmentIndex];
               setSelectedTouchpoint(null);
               const touchpoint = selectedSegment.touchpoints[0];
-              handleTouchpointClick(touchpoint);
+              const x = elements[0].element.x; // Get the x-coordinate from the clicked element
+              const y = elements[0].element.y; // Get the y-coordinate from the clicked element
+              handleTouchpointClick(touchpoint, x, y);
             }
           },
           indexAxis: 'x',
@@ -149,7 +159,17 @@ function CustomerJourneyChart() {
         }}
       />
 
-      {selectedTouchpoint && <Touchpoint touchpoint={selectedTouchpoint} />}
+{selectedTouchpoint && (
+  <div className={styles.popoverContainer}>
+    <Touchpoint
+      touchpoint={selectedTouchpoint} // Pass the selectedTouchpoint instead of touchpoint
+      dotPosition={dotPosition}
+      setSelectedTouchpoint={setSelectedTouchpoint}
+    />
+  </div>
+)}
+
+
 
       <JourneyTimeline
         touchpointLabels={touchpointLabels}
@@ -160,6 +180,7 @@ function CustomerJourneyChart() {
 }
 
 export default CustomerJourneyChart;
+
 
 
 
