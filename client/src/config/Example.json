@@ -1,0 +1,69 @@
+{
+    "customerSegments": [
+      {
+        "id": 1,
+        "name": "User not signed in",
+        "intents": ["No email subscription", "No extra communications subscribed"],
+        "touchpoints": [
+          {
+            "id": 1,
+            "name": "Confirmation Email",
+            "category": "Email",
+            "label": "Confirmation",
+            "tags": ["Essentials"]
+          },
+          {
+            "id": 2,
+            "name": "Newsletter",
+            "category": "Email",
+            "label": "Newsletter",
+            "tags": ["Essentials"]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "User with newsletter subscription",
+        "intents": ["Newsletter subscription", "Following social media pages", "Extra columns subscription"],
+        "touchpoints": [
+          {
+            "id": 3,
+            "name": "Confirmation Email",
+            "category": "Email",
+            "label": "Confirmation",
+            "tags": ["Essentials"]
+          },
+          {
+            "id": 4,
+            "name": "Newsletter",
+            "category": "Email",
+            "label": "Newsletter",
+            "tags": ["Essentials"]
+          },
+          {
+            "id": 5,
+            "name": "SMS",
+            "category": "SMS",
+            "label": "Reminders",
+            "tags": ["Extra"]
+          },
+          {
+            "id": 6,
+            "name": "Push Notification",
+            "category": "Notification",
+            "label": "Deals Shortlisted",
+            "tags": ["Extra"]
+          }
+        ]
+      }
+    ],
+    "phases": [
+      "Inception",
+      "Dreaming",
+      "Planning",
+      "Booking",
+      "Experiencing",
+      "Sharing"
+    ]
+  }
+  

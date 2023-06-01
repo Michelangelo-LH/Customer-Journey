@@ -1,0 +1,171 @@
+{
+  "customerSegments": [
+    {
+      "id": 1,
+      "name": "New user - Booking Confirmed",
+      "description": "This segment represents new users whose bookings have been successfully confirmed.",
+      "intents": ["Booking"],
+      "bookedSuccessfully": true,
+      "bookingRequest": false,
+      "bookingStatus": ["Confirmed"],
+      "newsletterSubscription": false,
+      "socialFollower": false,
+      "touchpoints": [
+        {
+          "id": 1,
+          "name": "Order Confirmation",
+          "category": "Web",
+          "label": "Confirmation Page",
+          "tags": ["Order", "Transactional", "Confirmation"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 2,
+          "name": "Booking Confirmation",
+          "category": "Email",
+          "label": "Confirmation Email",
+          "tags": ["Booking", "Transactional", "Confirmation"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 3,
+          "name": "Welcome",
+          "category": "Email",
+          "label": "Welcome and Booking Details",
+          "tags": ["Booking", "Transactional", "Onboarding"],
+          "timeDelay": 2,
+          "selected": false,
+          "phase": "Experiencing"
+        },
+        {
+          "id": 4,
+          "name": "Booking Experience Feedback Request",
+          "category": "Email",
+          "label": "Trustpilot Feedback",
+          "tags": ["Booking", "Transactional", "Feedback", "Experience"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Experiencing"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "New user - Booking Pending",
+      "description": "This segment represents new users with pending bookings.",
+      "intents": ["Booking"],
+      "bookedSuccessfully": true,
+      "bookingRequest": true,
+      "bookingStatus": ["Pending"],
+      "newsletterSubscription": false,
+      "socialFollower": false,
+      "touchpoints": [
+        {
+          "id": 5,
+          "name": "Order Confirmation",
+          "category": "Web",
+          "label": "Confirmation Page",
+          "tags": ["Order", "Transactional", "Confirmation"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 6,
+          "name": "Booking Request",
+          "category": "Email",
+          "label": "Booking Request Email",
+          "tags": ["Booking", "Transactional", "Request"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 7,
+          "name": "Booking Confirmation",
+          "category": "Email",
+          "label": "Confirmation Email",
+          "tags": ["Booking", "Transactional", "Confirmation"],
+          "timeDelay": 2.5,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 8,
+          "name": "Welcome",
+          "category": "Email",
+          "label": "Welcome and Booking Details",
+          "tags": ["Booking", "Transactional", "Onboarding"],
+          "timeDelay": 2,
+          "selected": false,
+          "phase": "Experiencing"
+        },
+        {
+          "id": 9,
+          "name": "Booking Experience Feedback Request",
+          "category": "Email",
+          "label": "Trustpilot Feedback",
+          "tags": ["Booking", "Transactional", "Feedback", "Experience"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Experiencing"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "New user - Booking Blocked",
+      "description": "This segment represents new users whose booking requests have been blocked.",
+      "intents": ["Booking"],
+      "bookedSuccessfully": false,
+      "bookingRequest": true,
+      "bookingStatus": ["Pending"],
+      "newsletterSubscription": false,
+      "socialFollower": false,
+      "touchpoints": [
+        {
+          "id": 10,
+          "name": "Order Confirmation",
+          "category": "Web",
+          "label": "Confirmation Page",
+          "tags": ["Order", "Transactional", "Confirmation"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 11,
+          "name": "Booking Request",
+          "category": "Email",
+          "label": "Booking Request Email",
+          "tags": ["Booking", "Transactional", "Request"],
+          "timeDelay": 0,
+          "selected": false,
+          "phase": "Booking"
+        },
+        {
+          "id": 12,
+          "name": "Booking Blocked",
+          "category": "Email",
+          "label": "Booking Request Follow-Up Email",
+          "tags": ["Booking", "Transactional", "Request", "Blocked"],
+          "timeDelay": 3,
+          "selected": false,
+          "phase": "Booking"
+        }
+      ]
+    }
+  ],
+  "phases": [
+    "Inception",
+    "Dreaming",
+    "Planning",
+    "Booking",
+    "Experiencing",
+    "Sharing"
+  ]
+}
