@@ -87,9 +87,9 @@ function CustomerJourneyChart() {
         backgroundColor: dotColor,
         borderColor: dotColor,
         borderWidth: 2,
-        pointRadius: 8,
-        pointHoverRadius: 10,
-        pointHitRadius: 8,
+        pointRadius: 16,
+        pointHoverRadius: 24,
+        pointHitRadius: 16,
         showLine: showLine,
         spanGaps: true,
       };
@@ -153,7 +153,7 @@ function CustomerJourneyChart() {
           },
           elements: {
             point: {
-              hoverRadius: 10,
+              hoverRadius: 24,
             },
           },
         }}

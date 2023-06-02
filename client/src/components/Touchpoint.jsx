@@ -7,7 +7,7 @@ function Touchpoint({ touchpoint, dotPosition, setSelectedTouchpoint }) {
     position: 'absolute',
     top: 0,
     left: 0,
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(0%, -100%)',
     backgroundColor: '#fff',
     border: '1px solid #ccc',
     borderRadius: '4px',
@@ -63,7 +63,7 @@ function Touchpoint({ touchpoint, dotPosition, setSelectedTouchpoint }) {
       newPosition.top -= popoverRect.height / 2;
 
       // Move the popover up by subtracting a value from the top position
-      const moveUpAmount = 50; // Adjust this value as needed
+      const moveUpAmount = 150; // Adjust this value as needed
       newPosition.top -= moveUpAmount;
 
       // Adjust the width of the popover
@@ -89,6 +89,7 @@ function Touchpoint({ touchpoint, dotPosition, setSelectedTouchpoint }) {
         <p>Label: {touchpoint.label}</p>
         <p>Tags: {touchpoint.tags.join(', ')}</p>
         <p>Time Delay: {touchpoint.timeDelay}</p>
+        <p>Description: {touchpoint.description}</p> {/* Added line */}
       </div>
     </div>
   );

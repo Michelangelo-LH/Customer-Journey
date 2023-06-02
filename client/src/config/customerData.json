@@ -17,6 +17,7 @@
           "category": "Web",
           "label": "Confirmation Page",
           "tags": ["Order", "Transactional", "Confirmation"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Booking"
@@ -27,6 +28,7 @@
           "category": "Email",
           "label": "Confirmation Email",
           "tags": ["Booking", "Transactional", "Confirmation"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Booking"
@@ -37,6 +39,7 @@
           "category": "Email",
           "label": "Welcome and Booking Details",
           "tags": ["Booking", "Transactional", "Onboarding"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 2,
           "selected": false,
           "phase": "Experiencing"
@@ -47,6 +50,7 @@
           "category": "Email",
           "label": "Trustpilot Feedback",
           "tags": ["Booking", "Transactional", "Feedback", "Experience"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Experiencing"
@@ -70,6 +74,7 @@
           "category": "Web",
           "label": "Confirmation Page",
           "tags": ["Order", "Transactional", "Confirmation"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Booking"
@@ -80,6 +85,7 @@
           "category": "Email",
           "label": "Booking Request Email",
           "tags": ["Booking", "Transactional", "Request"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Booking"
@@ -90,6 +96,7 @@
           "category": "Email",
           "label": "Confirmation Email",
           "tags": ["Booking", "Transactional", "Confirmation"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 2.5,
           "selected": false,
           "phase": "Booking"
@@ -100,6 +107,7 @@
           "category": "Email",
           "label": "Welcome and Booking Details",
           "tags": ["Booking", "Transactional", "Onboarding"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 2,
           "selected": false,
           "phase": "Experiencing"
@@ -110,6 +118,7 @@
           "category": "Email",
           "label": "Trustpilot Feedback",
           "tags": ["Booking", "Transactional", "Feedback", "Experience"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Experiencing"
@@ -133,6 +142,7 @@
           "category": "Web",
           "label": "Confirmation Page",
           "tags": ["Order", "Transactional", "Confirmation"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Booking"
@@ -143,6 +153,7 @@
           "category": "Email",
           "label": "Booking Request Email",
           "tags": ["Booking", "Transactional", "Request"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 0,
           "selected": false,
           "phase": "Booking"
@@ -153,6 +164,7 @@
           "category": "Email",
           "label": "Booking Request Follow-Up Email",
           "tags": ["Booking", "Transactional", "Request", "Blocked"],
+          "description": "TouchPoint Description here...",
           "timeDelay": 3,
           "selected": false,
           "phase": "Booking"
