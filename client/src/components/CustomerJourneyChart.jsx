@@ -15,12 +15,31 @@ import customerData from '../config/customerData.json';
 function CustomerJourneyChart() {
   const { customerSegments } = customerData;
 
-  const [filteredSegmentIds, setFilteredSegmentIds] = useState([]);
+  // const [filteredSegmentIds, setFilteredSegmentIds] = useState([]);
+  const [filteredSegmentIds, setFilteredSegmentIds] = useState(() => customerSegments.map(segment => segment.id));
+
   const [selectedTouchpoint, setSelectedTouchpoint] = useState(null);
   const [showLine, setShowLine] = useState(true);
 
+  // const updateChartData = (selectedFilters) => {
+  //   setFilteredSegmentIds(selectedFilters);
+  // };
   const updateChartData = (selectedFilters) => {
-    setFilteredSegmentIds(selectedFilters);
+    if (!arraysEqual(selectedFilters, filteredSegmentIds)) {
+      setFilteredSegmentIds(selectedFilters);
+    }
+  };
+  
+  const arraysEqual = (array1, array2) => {
+    if (array1.length !== array2.length) {
+      return false;
+    }
+    for (let i = 0; i < array1.length; i++) {
+      if (array1[i] !== array2[i]) {
+        return false;
+      }
+    }
+    return true;
   };
 
   const handleTouchpointClick = (touchpoint, x, y) => {
@@ -31,14 +50,20 @@ function CustomerJourneyChart() {
     setShowLine(!showLine);
   };
 
-  const filteredSegments = customerSegments.filter((segment) =>
-    filteredSegmentIds.includes(segment.id)
-  );
+
+  const filteredSegments = customerSegments.filter((segment) => {
+    console.log('filteredSegmentIds:', filteredSegmentIds);
+    console.log('customerSegments:', customerSegments);
+    console.log('segment:', segment);
+    console.log('segment.touchpoints:', segment.touchpoints);
+    return filteredSegmentIds.length === 0 || filteredSegmentIds.includes(segment.id);
+  });
+  
 
   const segmentNames = filteredSegments.map((segment) => segment.name);
 
   const touchpointLabels = filteredSegments.flatMap((segment) =>
-    segment.touchpoints.map((touchpoint) => touchpoint.name)
+    segment.touchpoints ? segment.touchpoints.map((touchpoint) => touchpoint.name) : []
   );
 
   const colorPalette = [
@@ -55,6 +80,14 @@ function CustomerJourneyChart() {
 
     return segment.touchpoints.map((touchpoint, touchpointIndex) => {
       const timeDelay = parseFloat(touchpoint.timeDelay); // Parse the time delay as a float
+
+      if (touchpoint.dataPoints && touchpoint.dataPoints.length > 0) {
+        // The dataPoints array is not empty
+        // Perform the desired operations here
+      } else {
+        // The dataPoints array is empty
+        // Handle the case where there are no data points
+      }
 
       let totalDelay = 0; // Variable to keep track of the total time delay
 
@@ -112,28 +145,36 @@ function CustomerJourneyChart() {
   return (
     <div>
       <h2>Customer Segments:</h2>
-      <CustomerJourneyFilters
-        segments={customerSegments}
-        updateChartData={updateChartData}
-      />
-      <button onClick={toggleLine}>
-        {showLine ? 'Hide Line' : 'Show Line'}
-      </button>
+      <CustomerJourneyFilters segments={customerSegments} updateChartData={updateChartData} />
+      <button onClick={toggleLine}>{showLine ? 'Hide Line' : 'Show Line'}</button>
       <Line
         data={chartData}
         options={{
           responsive: true,
+          
           onClick: (event, elements) => {
             if (elements && elements.length > 0) {
-              const segmentIndex = elements[0].index;
-              const selectedSegment = filteredSegments[segmentIndex];
+              const datasetIndex = elements[0].element.datasetIndex;
+              const touchpointIndex = elements[0].element.index;
+              const selectedSegment = filteredSegments[datasetIndex];
+          
+              if (selectedSegment && selectedSegment.touchpoints) {
+                setSelectedTouchpoint(null);
+                const touchpoints = selectedSegment.touchpoints;
+                if (touchpointIndex >= 0 && touchpointIndex < touchpoints.length) {
+                  const touchpoint = touchpoints[touchpointIndex];
+                  const x = elements[0].element.x; // Get the x-coordinate from the clicked element
+                  const y = elements[0].element.y; // Get the y-coordinate from the clicked element
+                  handleTouchpointClick(touchpoint, x, y);
+                }
+              }
+            } else {
+              // Handle the chart click event when the click is outside the dots
               setSelectedTouchpoint(null);
-              const touchpoint = selectedSegment.touchpoints[0];
-              const x = elements[0].element.x; // Get the x-coordinate from the clicked element
-              const y = elements[0].element.y; // Get the y-coordinate from the clicked element
-              handleTouchpointClick(touchpoint, x, y);
             }
           },
+          
+
           indexAxis: 'x',
           scales: {
             x: {
@@ -156,30 +197,38 @@ function CustomerJourneyChart() {
               hoverRadius: 24,
             },
           },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const datasetLabel = context.dataset.label || '';
+                  const dataLabel = context.parsed.y !== null ? context.parsed.y : '';
+                  const timeDelay = context.parsed.x !== null ? context.parsed.x : '';
+                  return `${datasetLabel}: ${dataLabel} (Time Delay: ${timeDelay})`;
+                },
+              },
+            },
+          },
         }}
       />
 
-{selectedTouchpoint && (
-  <div className={styles.popoverContainer}>
-    <Touchpoint
-      touchpoint={selectedTouchpoint} // Pass the selectedTouchpoint instead of touchpoint
-      dotPosition={dotPosition}
-      setSelectedTouchpoint={setSelectedTouchpoint}
-    />
-  </div>
-)}
+      {selectedTouchpoint && (
+        <div className={styles.popoverContainer}>
+          <Touchpoint
+            touchpoint={selectedTouchpoint} // Pass the selectedTouchpoint instead of touchpoint
+            dotPosition={dotPosition}
+            setSelectedTouchpoint={setSelectedTouchpoint}
+          />
+        </div>
+      )}
 
-
-
-      <JourneyTimeline
-        touchpointLabels={touchpointLabels}
-        handleTouchpointClick={handleTouchpointClick}
-      />
+      <JourneyTimeline touchpointLabels={touchpointLabels} handleTouchpointClick={handleTouchpointClick} />
     </div>
   );
 }
 
 export default CustomerJourneyChart;
+
 
 
 
