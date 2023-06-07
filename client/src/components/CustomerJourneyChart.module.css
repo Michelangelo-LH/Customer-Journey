@@ -1,5 +1,5 @@
 /* CustomerJourneyChart.module.css */
-.side-panel {
+/* .side-panel {
     position: fixed;
     top: 0;
     left: 0;
@@ -8,11 +8,38 @@
     background-color: #fff;
     padding: 20px;
     z-index: 9999;
-  }
+  } */
   
-  .popoverContainer {
+  /* .popoverContainer {
     position: absolute;
     z-index: 9999;
-    /* Add other styles for the popover container */
+  } */
+
+  .custom-tooltip {
+    background-color: white;
+    border: 1px solid gray;
+    padding: 8px;
+    font-family: Arial, sans-serif;
   }
+  
+  .custom-tooltip table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .custom-tooltip th,
+  .custom-tooltip td {
+    padding: 4px;
+    text-align: left;
+    border-bottom: 1px solid lightgray;
+  }
+  
+  .tooltip-value {
+    display: inline-block;
+    padding: 2px 4px;
+    border: 1px solid;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  
 
