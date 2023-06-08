@@ -124,11 +124,12 @@ const MyChart = () => {
       {
         data: touchpointData.map((touchpoint) => touchpoint.time),
         tension: 0,
-        backgroundColor: 'rgba(3, 116, 218, 1)', // Set the background color for the progressive line
-        borderColor: 'rgba(255, 188, 43, 1)', // Set the border color for the progressive line
+        backgroundColor: 'rgba(255, 188, 43, 1)', // Set the background color for the progressive line
+        borderColor: 'rgba(3, 116, 218, 1)', // Set the border color for the progressive line
         pointRadius: 8, // Hide the points of the progressive line
         borderWidth: 2, // Set the border width for the progressive line
-        pointHoverRadius: 16,
+        hoverBorderWidth: 2,
+        pointHoverRadius: 12,
         pointHitRadius: 16,
         spanGaps: true,
         label: 'Comms Life Cycle',
@@ -150,16 +151,47 @@ const MyChart = () => {
         title: {
           display: true,
           text: 'Touchpoint',
+          font: {
+            family: 'Inter', // Set the font family for the x-axis title
+            size: 14, // Set the font size for the x-axis title
+            weight: 'bold', // Set the font weight for the x-axis title
+          },
+        },
+        ticks: {
+          font: {
+            family: 'Inter', // Set the font family for the x-axis ticks
+            size: 12, // Set the font size for the x-axis ticks
+          },
         },
       },
       y: {
         title: {
           display: true,
           text: 'Time Gap (Number of Days)',
+          font: {
+            family: 'Inter', // Set the font family for the y-axis title
+            size: 14, // Set the font size for the y-axis title
+            weight: 'bold', // Set the font weight for the y-axis title
+          },
+        },
+        ticks: {
+          font: {
+            family: 'Inter', // Set the font family for the y-axis ticks
+            size: 12, // Set the font size for the y-axis ticks
+          },
         },
       },
     },
     plugins: {
+      title: {
+        display: true,
+        text: 'Comms Life Cycle',
+        font: {
+          family: 'Inter', // Set the font family for the chart title
+          size: 16, // Set the font size for the chart title
+          weight: 'bold', // Set the font weight for the chart title
+        },
+      },
       datalabels: {
         display: false,
       },
@@ -168,7 +200,7 @@ const MyChart = () => {
 
   return (
     <div>
-      <h2>Chart Component</h2>
+      {/* <h2>Chart Component</h2> */}
       <Line data={progressiveChartData} options={chartOptions} plugins={[ChartDataLabels]} />
       {/* <Touchpoint touchpointData={snap.touchpointData} /> */}
     </div>
