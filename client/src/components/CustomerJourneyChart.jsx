@@ -114,6 +114,7 @@ function CustomerJourneyChart() {
         ],
         backgroundColor: dotColor,
         borderColor: dotColor,
+        pointStyle: 'circle',
         borderWidth: 2,
         pointRadius: 16,
         pointHoverRadius: 24,

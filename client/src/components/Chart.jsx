@@ -70,7 +70,6 @@ const MyChart = () => {
     console.log('Snapshot:', snapshot(store.touchpointData));
   }, []);
 
-
   // Extract touchpoint labels and time from the imported JSON
   const touchpointData = [];
 
@@ -87,7 +86,8 @@ const MyChart = () => {
 
         if (touchpointIndex === 0 && timeGap === 0 && segmentIndex > 0) {
           // If the first touchpoint in the sequence has a time of 0 and it's not the first segment,
-          // set the time to be the sum of the cumulative time and the timeGap
+          // set the time to be the sum of the previous phase's cumulative time and the timeGap
+          // This is to maintain the continuity of the progressive line when there is a time gap between segments
           const previousSegment = customerData.segments[segmentIndex - 1];
           const lastTouchpointInPreviousSegment = previousSegment.sequences[previousSegment.sequences.length - 1].touchpoints.slice(-1)[0];
           const previousTime = touchpointData.find((tp) => tp.label === lastTouchpointInPreviousSegment.label).time;
@@ -99,10 +99,11 @@ const MyChart = () => {
           });
         } else {
           sequenceCumulativeTime += timeGap; // Update sequenceCumulativeTime with the sum of sequenceCumulativeTime and timeGap
+          cumulativeTime += timeGap; // Update cumulativeTime with the sum of cumulativeTime and timeGap
 
           touchpointData.push({
             label: touchpoint.label,
-            time: phaseCumulativeTime + sequenceCumulativeTime, // Use phaseCumulativeTime + sequenceCumulativeTime instead of cumulativeTime + sequenceCumulativeTime
+            time: cumulativeTime, // Use cumulativeTime instead of phaseCumulativeTime + sequenceCumulativeTime
             phaseId: segment.id,
             sequenceId: sequence.id,
           });
@@ -115,35 +116,35 @@ const MyChart = () => {
     cumulativeTime = phaseCumulativeTime; // Update cumulativeTime with the cumulative time of the current phase
   });
 
-  // Sort touchpoints by time
   touchpointData.sort((a, b) => a.time - b.time);
 
-  // Calculate time gaps between touchpoints
-  const timeGaps = touchpointData.map((touchpoint, index) => {
-    if (index === 0) {
-      return touchpoint.time; // The first touchpoint has a time gap equal to its own time value
-    } else {
-      const currentTime = touchpoint.time;
-      const previousTime = touchpointData[index - 1].time;
-      return currentTime - previousTime;
-    }
-  });
-
-  // Prepare chart data using the touchpointData from the snapshot
-  const chartData = {
-    labels: snap.touchpointData.map((touchpoint) => touchpoint.label),
+  const progressiveChartData = {
+    labels: touchpointData.map((touchpoint) => touchpoint.label),
     datasets: [
       {
-        data: snap.touchpointData.map((touchpoint) => touchpoint.time),
+        data: touchpointData.map((touchpoint) => touchpoint.time),
         tension: 0,
+        backgroundColor: 'rgba(3, 116, 218, 1)', // Set the background color for the progressive line
+        borderColor: 'rgba(255, 188, 43, 1)', // Set the border color for the progressive line
+        pointRadius: 8, // Hide the points of the progressive line
+        borderWidth: 2, // Set the border width for the progressive line
+        pointHoverRadius: 16,
+        pointHitRadius: 16,
+        spanGaps: true,
+        label: 'Comms Life Cycle',
+        borderDash: [4, 4],
+      fill: false,
       },
     ],
   };
 
-  console.log('Chart Data:', chartData); // Log the chart data
-
-  // Configure chart options
   const chartOptions = {
+    responsive: true,
+    animation: {
+      duration: 1000,
+      easing: 'easeInQuad',
+      loop: false,
+    },
     scales: {
       x: {
         title: {
@@ -168,12 +169,13 @@ const MyChart = () => {
   return (
     <div>
       <h2>Chart Component</h2>
-      <Line data={chartData} options={chartOptions} plugins={[ChartDataLabels]} />
-      <Touchpoint touchpointData={snap.touchpointData} />
+      <Line data={progressiveChartData} options={chartOptions} plugins={[ChartDataLabels]} />
+      {/* <Touchpoint touchpointData={snap.touchpointData} /> */}
     </div>
   );
 };
 
 export default MyChart;
+
 
 
