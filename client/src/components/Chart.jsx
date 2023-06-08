@@ -12,6 +12,20 @@ const store = proxy({
 });
 
 Chart.register(...registerables);
+Chart.register(ChartDataLabels);
+
+const getColorByType = (type) => {
+  switch (type) {
+    case 'Marketing':
+      return 'rgba(255, 188, 43, 1)'; // Yellow
+    case 'Product':
+      return 'rgba(3, 116, 218, 1)'; // Blue
+    case 'Transactional':
+      return 'rgba(255, 0, 0, 1)'; // Red
+    default:
+      return 'rgba(0, 0, 0, 1)'; // Black (default color)
+  }
+};
 
 const MyChart = () => {
   const snap = useSnapshot(store);
@@ -27,33 +41,52 @@ const MyChart = () => {
 
       segment.sequences.forEach((sequence) => {
         let sequenceCumulativeTime = 0;
-        let previousTime = phaseCumulativeTime; // Initialize previousTime within the sequence loop
+        let previousTime = phaseCumulativeTime;
 
         sequence.touchpoints.forEach((touchpoint, touchpointIndex) => {
           const timeGap = touchpoint.time;
 
           if (touchpointIndex === 0 && segmentIndex > 0) {
-            // If the first touchpoint in the sequence and it's not the first segment,
-            // set the time to be the sum of the previous phase's cumulative time and the timeGap
             const previousSegment = customerData.segments[segmentIndex - 1];
             const lastTouchpointInPreviousSegment = previousSegment.sequences[previousSegment.sequences.length - 1].touchpoints.slice(-1)[0];
             const previousTime = touchpointData.find((tp) => tp.label === lastTouchpointInPreviousSegment.label).time;
             touchpointData.push({
+              name: touchpoint.name,
+              status: touchpoint.status,
+              intent: touchpoint.intent,
               label: touchpoint.label,
+              conditions: touchpoint.conditions,
+              platform: touchpoint.platform,
+              section: touchpoint.section,
+              tags: touchpoint.tags,
               time: previousTime + timeGap,
+              type: touchpoint.type,
+              description: touchpoint.description,
               phaseId: segment.id,
               sequenceId: sequence.id,
             });
           } else {
             sequenceCumulativeTime += timeGap;
-            previousTime += timeGap; // Update previousTime with the sum of previousTime and timeGap
+            previousTime += timeGap;
 
             touchpointData.push({
+              name: touchpoint.name,
+              status: touchpoint.status,
+              intent: touchpoint.intent,
               label: touchpoint.label,
+              conditions: touchpoint.conditions,
+              platform: touchpoint.platform,
+              section: touchpoint.section,
+              tags: touchpoint.tags,
               time: previousTime,
+              type: touchpoint.type, // Set the type property of the touchpoint object
+              description: touchpoint.description,
               phaseId: segment.id,
               sequenceId: sequence.id,
             });
+            // Move the console logs here, where the touchpoint variable is defined
+            console.log('Touchpoint:', touchpoint);
+            console.log('Type:', touchpoint.type);
           }
         });
 
@@ -68,6 +101,8 @@ const MyChart = () => {
     store.touchpointData = touchpointData;
 
     console.log('Snapshot:', snapshot(store.touchpointData));
+    console.log('touchpointData:', touchpointData);
+    console.log('touchpointData types:', touchpointData.map((touchpoint) => touchpoint.type));
   }, []);
 
   // Extract touchpoint labels and time from the imported JSON
@@ -118,23 +153,34 @@ const MyChart = () => {
 
   touchpointData.sort((a, b) => a.time - b.time);
 
+
   const progressiveChartData = {
     labels: touchpointData.map((touchpoint) => touchpoint.label),
     datasets: [
       {
-        data: touchpointData.map((touchpoint) => touchpoint.time),
         tension: 0,
-        backgroundColor: 'rgba(255, 188, 43, 1)', // Set the background color for the progressive line
-        borderColor: 'rgba(3, 116, 218, 1)', // Set the border color for the progressive line
-        pointRadius: 8, // Hide the points of the progressive line
-        borderWidth: 2, // Set the border width for the progressive line
+        pointRadius: 8,
+        borderWidth: 2,
         hoverBorderWidth: 2,
         pointHoverRadius: 12,
         pointHitRadius: 16,
         spanGaps: true,
         label: 'Comms Life Cycle',
         borderDash: [4, 4],
-      fill: false,
+        fill: false,
+        data: touchpointData.map((touchpoint) => touchpoint.time),
+        backgroundColor: touchpointData.map((touchpoint) => getColorByType(touchpoint.type)),
+        segment: {
+          borderColor: (ctx) => {
+            const touchpoint = touchpointData[ctx.p0.parsed.x]; // Get the touchpoint based on the x-axis value
+            return touchpoint ? getColorByType(touchpoint) : 'default';
+          },
+          borderDash: (ctx) => {
+            const touchpoint = touchpointData[ctx.p0.parsed.x]; // Get the touchpoint based on the x-axis value
+            return touchpoint ? undefined : [6, 6];
+          },
+        },
+        
       },
     ],
   };
@@ -170,7 +216,7 @@ const MyChart = () => {
           text: 'Time Gap (Number of Days)',
           font: {
             family: 'Inter', // Set the font family for the y-axis title
-            size: 14, // Set the font size for the y-axis title
+            size: 18, // Set the font size for the y-axis title
             weight: 'bold', // Set the font weight for the y-axis title
           },
         },
@@ -191,18 +237,56 @@ const MyChart = () => {
           size: 16, // Set the font size for the chart title
           weight: 'bold', // Set the font weight for the chart title
         },
+        tooltip: {
+          callbacks: {
+            title: (tooltipItems) => {
+              const tooltipItem = tooltipItems[0]; // Assuming there is only one tooltip item
+              const { label } = tooltipItem;
+              const touchpoint = snap.touchpointData.find((tp) => tp.label === label);
+
+              // Customize the title text as per your requirement
+              return `Touchpoint: ${touchpoint.label} (${touchpoint.time} Days)`;
+            },
+
+            label: (tooltipItem) => {
+              const { label } = tooltipItem;
+              const touchpoint = snap.touchpointData.find((tp) => tp.label === label);
+
+              // Customize the label text as per your requirement
+              return `Status: ${touchpoint.status}`;
+            },
+
+            afterLabel: (tooltipItem) => {
+              const { label } = tooltipItem;
+              const touchpoint = snap.touchpointData.find((tp) => tp.label === label);
+
+              // Customize the additional information text as per your requirement
+              return `Description: ${touchpoint.description}`;
+            },
+          },
+        },
       },
       datalabels: {
-        display: false,
+        display: false, // Set the display property to true
+        anchor: 'end',
+        align: 'start',
+        font: {
+          size: 12, // Set the font size for the tooltip labels
+        },
+        formatter: (value) => `${value} Days`, // Format the tooltip labels
       },
     },
+
   };
 
+  console.log('backgroundColor:', progressiveChartData.datasets[0].backgroundColor);
+  // console.log('borderColor:', progressiveChartData.datasets[0].borderColor);
+
   return (
-    <div>
+    <div className="md:container md:mx-auto">
       {/* <h2>Chart Component</h2> */}
       <Line data={progressiveChartData} options={chartOptions} plugins={[ChartDataLabels]} />
-      {/* <Touchpoint touchpointData={snap.touchpointData} /> */}
+      <Touchpoint touchpointData={snap.touchpointData} />
     </div>
   );
 };
