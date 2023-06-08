@@ -2,44 +2,45 @@
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js';
-import styles from './CustomerJourneyChart.module.css';
 import { Popover } from 'react-bootstrap';
+import styles from './CustomerJourneyChart.module.css';
 import JourneyTimeline from './JourneyTimeline';
 import Touchpoint from './Touchpoint';
+import CustomerJourneyFilters from './CustomerJourneyFilters';
+import customerData from '../config/customerData_TEST.json';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
 
-import CustomerJourneyFilters from './CustomerJourneyFilters';
-import customerData from '../config/customerData.json';
+const arraysEqual = (array1, array2) => {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i] !== array2[i]) {
+      return false;
+    }
+  }
+  return true;
+};
 
 function CustomerJourneyChart() {
-  const { customerSegments } = customerData;
+  const { customerSegments, phases } = customerData;
 
-  // const [filteredSegmentIds, setFilteredSegmentIds] = useState([]);
+  console.log('phases:', phases);
+
+  console.log('customerSegments:', customerSegments);
+
+
   const [filteredSegmentIds, setFilteredSegmentIds] = useState(() => customerSegments.map(segment => segment.id));
+  console.log('filteredSegmentIds:', filteredSegmentIds);
 
   const [selectedTouchpoint, setSelectedTouchpoint] = useState(null);
   const [showLine, setShowLine] = useState(true);
 
-  // const updateChartData = (selectedFilters) => {
-  //   setFilteredSegmentIds(selectedFilters);
-  // };
   const updateChartData = (selectedFilters) => {
     if (!arraysEqual(selectedFilters, filteredSegmentIds)) {
       setFilteredSegmentIds(selectedFilters);
     }
-  };
-  
-  const arraysEqual = (array1, array2) => {
-    if (array1.length !== array2.length) {
-      return false;
-    }
-    for (let i = 0; i < array1.length; i++) {
-      if (array1[i] !== array2[i]) {
-        return false;
-      }
-    }
-    return true;
   };
 
   const handleTouchpointClick = (touchpoint, x, y) => {
@@ -50,17 +51,15 @@ function CustomerJourneyChart() {
     setShowLine(!showLine);
   };
 
+  const filteredSegments = customerSegments && filteredSegmentIds
+    ? customerSegments.filter((segment) => filteredSegmentIds.includes(segment.id))
+    : [];
 
-  const filteredSegments = customerSegments.filter((segment) => {
-    console.log('filteredSegmentIds:', filteredSegmentIds);
-    console.log('customerSegments:', customerSegments);
-    console.log('segment:', segment);
-    console.log('segment.touchpoints:', segment.touchpoints);
-    return filteredSegmentIds.length === 0 || filteredSegmentIds.includes(segment.id);
-  });
-  
+  console.log(filteredSegments); // Placed here to log the filtered segments
 
   const segmentNames = filteredSegments.map((segment) => segment.name);
+  console.log(Array.isArray(filteredSegments));
+
 
   const touchpointLabels = filteredSegments.flatMap((segment) =>
     segment.touchpoints ? segment.touchpoints.map((touchpoint) => touchpoint.name) : []
@@ -81,12 +80,8 @@ function CustomerJourneyChart() {
     return segment.touchpoints.map((touchpoint, touchpointIndex) => {
       const timeDelay = parseFloat(touchpoint.timeDelay); // Parse the time delay as a float
 
-      if (touchpoint.dataPoints && touchpoint.dataPoints.length > 0) {
-        // The dataPoints array is not empty
-        // Perform the desired operations here
-      } else {
-        // The dataPoints array is empty
-        // Handle the case where there are no data points
+      if (!touchpoint.dataPoints || touchpoint.dataPoints.length === 0) {
+        touchpoint.dataPoints = []; // Add an empty dataPoints array if missing
       }
 
       let totalDelay = 0; // Variable to keep track of the total time delay
@@ -125,13 +120,24 @@ function CustomerJourneyChart() {
         pointHitRadius: 16,
         showLine: showLine,
         spanGaps: true,
+        name: touchpoint.name, // Add the name field to the touchpoint object
+        status: touchpoint.status || 'Unknown', // Add the status field to the touchpoint object (default to 'Unknown' if missing)
+        intent: touchpoint.intent || '', // Add the intent field to the touchpoint object (default to an empty string if missing)
+        // label: touchpoint.label || '', // Add the label field to the touchpoint object (default to an empty string if missing)
+        conditions: touchpoint.conditions || '', // Add the conditions field to the touchpoint object (default to an empty string if missing)
+        platform: touchpoint.platform || '', // Add the platform field to the touchpoint object (default to an empty string if missing)
+        section: touchpoint.section || '', // Add the section field to the touchpoint object (default to an empty string if missing)
+        tags: touchpoint.tags || [], // Add the tags field to the touchpoint object (default to an empty array if missing)
+        time: touchpoint.time || '', // Add the time field to the touchpoint object (default to an empty string if missing)
+        type: touchpoint.type || '', // Add the type field to the touchpoint object (default to an empty string if missing)
+        description: touchpoint.description || '', // Add the description field to the touchpoint object (default to an empty string if missing)
       };
     });
   });
 
   const chartData = {
     labels: segmentNames,
-    datasets: datasets.flat(),
+    datasets: datasets.reduce((arr, dataset) => arr.concat(dataset), []),
   };
 
   // Calculate dot position if a touchpoint is selected
@@ -151,20 +157,19 @@ function CustomerJourneyChart() {
         data={chartData}
         options={{
           responsive: true,
-          
           onClick: (event, elements) => {
             if (elements && elements.length > 0) {
-              const datasetIndex = elements[0].element.datasetIndex;
-              const touchpointIndex = elements[0].element.index;
+              const datasetIndex = elements[0].datasetIndex;
+              const touchpointIndex = elements[0].index;
               const selectedSegment = filteredSegments[datasetIndex];
-          
+
               if (selectedSegment && selectedSegment.touchpoints) {
                 setSelectedTouchpoint(null);
                 const touchpoints = selectedSegment.touchpoints;
                 if (touchpointIndex >= 0 && touchpointIndex < touchpoints.length) {
                   const touchpoint = touchpoints[touchpointIndex];
-                  const x = elements[0].element.x; // Get the x-coordinate from the clicked element
-                  const y = elements[0].element.y; // Get the y-coordinate from the clicked element
+                  const x = elements[0].x; // Get the x-coordinate from the clicked element
+                  const y = elements[0].y; // Get the y-coordinate from the clicked element
                   handleTouchpointClick(touchpoint, x, y);
                 }
               }
@@ -173,8 +178,6 @@ function CustomerJourneyChart() {
               setSelectedTouchpoint(null);
             }
           },
-          
-
           indexAxis: 'x',
           scales: {
             x: {
@@ -204,7 +207,9 @@ function CustomerJourneyChart() {
                   const datasetLabel = context.dataset.label || '';
                   const dataLabel = context.parsed.y !== null ? context.parsed.y : '';
                   const timeDelay = context.parsed.x !== null ? context.parsed.x : '';
-                  return `${datasetLabel}: ${dataLabel} (Time Delay: ${timeDelay})`;
+                  const touchpoint = context.parsed.points[0].raw; // Get the touchpoint object from the raw data
+                  const { name, status, intent, label, conditions, platform, section, tags, time, type, description } = touchpoint; // Destructure the touchpoint object
+                  return `${datasetLabel}: ${dataLabel} (Time Delay: ${timeDelay})\nName: ${name}\nStatus: ${status}\nIntent: ${intent}\nLabel: ${label}\nConditions: ${conditions}\nPlatform: ${platform}\nSection: ${section}\nTags: ${tags}\nTime: ${time}\nType: ${type}\nDescription: ${description}`; // Include additional information in the tooltip
                 },
               },
             },
@@ -228,8 +233,6 @@ function CustomerJourneyChart() {
 }
 
 export default CustomerJourneyChart;
-
-
 
 
 

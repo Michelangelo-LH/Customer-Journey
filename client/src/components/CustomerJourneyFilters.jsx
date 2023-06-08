@@ -1,5 +1,5 @@
 //CustomerJourneyFilters.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart, CategoryScale } from 'chart.js/auto';
 
@@ -18,12 +18,12 @@ function CustomerJourneyFilters({ segments, updateChartData }) {
 
   const renderFilters = () => {
     return segments.map((segment) => (
-      <div key={segment.id}>
+      <div key={segment.name}>
         <label>
           <input
             type="checkbox"
-            checked={selectedFilters.includes(segment.id)}
-            onChange={() => handleFilterChange(segment.id)}
+            checked={selectedFilters.includes(segment.name)}
+            onChange={() => handleFilterChange(segment.name)}
           />
           {segment.name}
         </label>
@@ -32,19 +32,18 @@ function CustomerJourneyFilters({ segments, updateChartData }) {
   };
 
   // Call the updateChartData function whenever the filters change
-  React.useEffect(() => {
-    updateChartData(selectedFilters);
-  }, [selectedFilters, updateChartData]);
+  useEffect(() => {
+    const selectedSegmentIds = segments
+      .filter((segment) => selectedFilters.includes(segment.name))
+      .map((segment) => segment.id);
+    updateChartData(selectedSegmentIds);
+  }, [selectedFilters, segments, updateChartData]);
 
-  return (
-    <div>
-      {/* <h2>Customer Journey Filters:</h2> */}
-      {renderFilters()}
-    </div>
-  );
+  return <div>{renderFilters()}</div>;
 }
 
 export default CustomerJourneyFilters;
+
 
 
 

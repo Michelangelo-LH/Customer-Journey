@@ -1,156 +1,146 @@
 {
-  "customerSegments": [
+  "segments": [
     {
-      "id": 1,
-      "name": "New user - Booking Confirmed",
-      "intents": ["Booking"],
-      "bookedSuccessfully": true,
-      "bookingRequest": false,
-      "bookingStatus": ["Confirmed"],
-      "newsletterSubscription": false,
-      "socialFollower": false,
-      "touchpoints": [
+      "name": "Booking Phase",
+      "sequences": [
         {
-          "id": 1,
-          "name": "Order Confirmation",
-          "category": "Web",
-          "label": "Confirmation Page",
-          "tags": ["Order", "Transactional", "Confirmation"],
-          "timeDelay": 0,
-          "selected": false
+          "name": "Dreaming",
+          "touchpoints": [
+            {
+              "name": "Email Subscription",
+              "status": "Empty",
+              "intent": "Inspiration",
+              "label": "Email Subscription",
+              "conditions": "newsletterSubscription",
+              "platform": "Web",
+              "section": "Landing Page",
+              "tags": ["Promotion"],
+              "time": "At every time (-)",
+              "type": "Marketing",
+              "description": "Deals and travel inspiration. Weekly in your inbox, daily in your feed."
+            }
+          ]
         },
         {
-          "id": 2,
-          "name": "Booking Confirmation",
-          "category": "Email",
-          "label": "Confirmation Email",
-          "tags": ["Booking", "Transactional", "Confirmation"],
-          "timeDelay": 0,
-          "selected": false
+          "name": "Planning",
+          "touchpoints": [
+            {
+              "name": "Shortlisted Item",
+              "status": "Availability Check",
+              "intent": "Shortlist, Comparison",
+              "label": "Shortlisted Item",
+              "conditions": "shortlistedItem",
+              "platform": "Web",
+              "section": "Result Page, Product Page",
+              "tags": ["..."],
+              "time": "...",
+              "type": "Product",
+              "description": "Save your holiday searches here and organize them by theme. From weekends away to honeymoon planning, easily compare holidays and save on your booking."
+            },
+            {
+              "name": "Basket Abandoned",
+              "status": "Basket Ref. N.",
+              "intent": "Shortlist, Comparison, Personalisation",
+              "label": "Pick up where you left off",
+              "conditions": "handOff",
+              "platform": "Web",
+              "section": "Landing Page, Result Page, Product Page",
+              "tags": ["Deal", "Quote", "..."],
+              "time": "Instant (0)",
+              "type": "Product",
+              "description": "Send me this deal functionality at the Checkout stage"
+            }
+          ]
         },
         {
-          "id": 3,
-          "name": "Welcome",
-          "category": "Email",
-          "label": "Welcome and Booking Details",
-          "tags": ["Booking", "Transactional", "Onboarding"],
-          "timeDelay": 2,
-          "selected": false
+          "name": "Booking",
+          "touchpoints": [
+            {
+              "name": "Basket Ref. N.",
+              "status": "Pending Order Ref. N.",
+              "intent": "Save Progress, Personalisation",
+              "label": "Save Deal",
+              "conditions": "dealSaved",
+              "platform": "Web",
+              "section": "Checkout Page",
+              "tags": ["Deal", "Quote"],
+              "time": "At every time (-)",
+              "type": "Product",
+              "description": "Send me this deal functionality at the Checkout stage"
+            },
+            {
+              "name": "Pending Request Ref. N.",
+              "status": "Pending Request Ref. N.",
+              "intent": "Booking, Confirmation",
+              "label": "Booking Request",
+              "conditions": "paymentDone, bookingRequest",
+              "platform": "Web",
+              "section": "Booking Request Email",
+              "tags": ["Booking", "Request"],
+              "time": "Same Day (0)",
+              "type": "Transactional",
+              "description": "Thanks for your holiday booking request"
+            },
+            {
+              "name": "Booking Request Follow-Up",
+              "status": "Pending Request Ref. N.",
+              "intent": "Booking, Confirmation",
+              "label": "Booking Request Follow-Up",
+              "conditions": "paymentDone, bookingRequest",
+              "platform": "Email",
+              "section": "Booking Request Update Email",
+              "tags": ["Booking", "Request", "Blocked"],
+              "time": "Within 72h (2.5)",
+              "type": "Transactional",
+              "description": "We are still working hard..."
+            }
+          ]
         },
         {
-          "id": 4,
-          "name": "Booking Experience Feedback Request",
-          "category": "Email",
-          "label": "Trustpilot Feedback",
-          "tags": ["Booking", "Transactional", "Feedback", "Experience"],
-          "timeDelay": 0,
-          "selected": false
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "New user - Booking Pending",
-      "intents": ["Booking"],
-      "bookedSuccessfully": true,
-      "bookingRequest": true,
-      "bookingStatus": ["Pending"],
-      "newsletterSubscription": false,
-      "socialFollower": false,
-      "touchpoints": [
-        {
-          "id": 5,
-          "name": "Order Confirmation",
-          "category": "Web",
-          "label": "Confirmation Page",
-          "tags": ["Order", "Transactional", "Confirmation"],
-          "timeDelay": 0,
-          "selected": false
-        },
-        {
-          "id": 6,
-          "name": "Booking Request",
-          "category": "Email",
-          "label": "Booking Request Email",
-          "tags": ["Booking", "Transactional", "Request"],
-          "timeDelay": 0,
-          "selected": false
-        },
-        {
-          "id": 7,
-          "name": "Booking Confirmation",
-          "category": "Email",
-          "label": "Confirmation Email",
-          "tags": ["Booking", "Transactional", "Confirmation"],
-          "timeDelay": 0,
-          "selected": false
-        },
-        {
-          "id": 8,
-          "name": "Welcome",
-          "category": "Email",
-          "label": "Welcome and Booking Details",
-          "tags": ["Booking", "Transactional", "Onboarding"],
-          "timeDelay": 0,
-          "selected": false
-        },
-        {
-          "id": 9,
-          "name": "Booking Experience Feedback Request",
-          "category": "Email",
-          "label": "Trustpilot Feedback",
-          "tags": ["Booking", "Transactional", "Feedback", "Experience"],
-          "timeDelay": 0,
-          "selected": false
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "New user - Booking Blocked",
-      "intents": ["Booking"],
-      "bookedSuccessfully": false,
-      "bookingRequest": true,
-      "bookingStatus": ["Pending"],
-      "newsletterSubscription": false,
-      "socialFollower": false,
-      "touchpoints": [
-        {
-          "id": 10,
-          "name": "Order Confirmation",
-          "category": "Web",
-          "label": "Confirmation Page",
-          "tags": ["Order", "Transactional", "Confirmation"],
-          "timeDelay": 0,
-          "selected": false
-        },
-        {
-          "id": 11,
-          "name": "Booking Request",
-          "category": "Email",
-          "label": "Booking Request Email",
-          "tags": ["Booking", "Transactional", "Request"],
-          "timeDelay": 0,
-          "selected": false
-        },
-        {
-          "id": 12,
-          "name": "Booking Blocked",
-          "category": "Email",
-          "label": "Booking Request Follow-Up Email",
-          "tags": ["Booking", "Transactional", "Request", "Blocked"],
-          "timeDelay": 0,
-          "selected": false
+          "name": "Experiencing",
+          "touchpoints": [
+            {
+              "name": "Confirmed Ref. N.",
+              "status": "Confirmed Ref. N.",
+              "intent": "Confirmation, Review informations",
+              "label": "Booking Confirmation",
+              "conditions": "bookedSuccessfully",
+              "platform": "Email",
+              "section": "Confirmation Email",
+              "tags": ["Booking", "Confirmation"],
+              "time": "Same Day (0)",
+              "type": "Transactional",
+              "description": "Your Booking is now confirmed"
+            },
+            {
+              "name": "Welcome",
+              "status": "Confirmed Ref. N.",
+              "intent": "Review informations, Manage",
+              "label": "Welcome",
+              "conditions": "bookedSuccessfully",
+              "platform": "Email",
+              "section": "Welcome & Booking details Email",
+              "tags": ["Booking", "Onboarding"],
+              "time": "Within two days (2)",
+              "type": "Transactional",
+              "description": "What to do next and Booking details"
+            },
+            {
+              "name": "Booking Experience Feedback",
+              "status": "Confirmed Ref. N.",
+              "intent": "Booking Experience Feedback",
+              "label": "Trustpilot Feedback",
+              "conditions": "bookedSuccessfully",
+              "platform": "Email",
+              "section": "Feedback Email",
+              "tags": ["Booking", "Experience", "Feedback"],
+              "time": "Same Day (0)",
+              "type": "Transactional",
+              "description": "How many stars would you give loveholidays.com"
+            }
+          ]
         }
       ]
     }
-  ],
-  "phases": [
-    "Inception",
-    "Dreaming",
-    "Planning",
-    "Booking",
-    "Experiencing",
-    "Sharing"
   ]
 }
